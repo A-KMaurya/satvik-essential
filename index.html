@@ -1,11 +1,980 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Satvik Essential</title>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Satvik Essentials - Hero &amp; Navigation</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#52d411",
+                        secondary: "#E6B325",
+                        deep_green: "#121b0d",
+                        earthy_green: "#669a4c",
+                        earth: "#121b0d",
+                        sage: "#669a4c",
+                        cream: "#f9fcf8",
+                    }
+                    ,
+                    fontFamily: {
+                        "display": ["Work Sans"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        #cart-sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        #cart-sidebar.translate-x-full {
+            transform: translateX(100%);
+        }
+        #cart-sidebar.translate-x-0 {
+            transform: translateX(0);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #669a4c33;
+            border-radius: 10px;
+        }
+    </style>
+
+    <style>
+        @keyframes bounce-slow {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .animate-bounce-slow {
+            animation: bounce-slow 5s ease-in-out infinite;
+        }
+    </style>
 </head>
-<body>
-    
+
+<body class="bg-background-light dark:bg-background-dark font-display text-deep_green dark:text-background-light">
+    <div class="fixed inset-0 z-[60] bg-deep_green/40 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none"
+        id="cart-overlay"></div>
+    <aside
+        class="fixed right-0 top-0 z-[70] h-screen w-full max-w-[400px] translate-x-full bg-white shadow-2xl transition-transform duration-300 flex flex-col dark:bg-background-dark"
+        id="cart-sidebar">
+        <div class="flex items-center justify-between border-b border-earthy_green/10 px-6 py-6">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">shopping_basket</span>
+                <h2 class="text-xl font-bold">Your Cart</h2>
+            </div>
+            <button
+                class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-earthy_green/10 transition-colors"
+                id="close-cart">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="flex-1 overflow-y-auto px-6 py-4 custom-scrollbar" id="cart-items-container">
+        </div>
+        <div class="border-t border-earthy_green/10 bg-white/50 px-6 py-8 dark:bg-deep_green/20">
+            <div class="space-y-3 mb-6">
+                <div class="flex justify-between text-sm text-earthy_green dark:text-gray-400">
+                    <span>Subtotal</span>
+                    <span id="cart-subtotal">₹0.00</span>
+                </div>
+                <div class="flex justify-between text-sm text-earthy_green dark:text-gray-400">
+                    <span>Shipping</span>
+                    <span class="text-primary font-semibold uppercase tracking-wider text-[10px]">Calculated at
+                        checkout</span>
+                </div>
+                <div class="flex justify-between text-xl font-black pt-2 border-t border-earthy_green/5">
+                    <span>Total</span>
+                    <span id="cart-total">₹0.00</span>
+                </div>
+            </div>
+            <button
+                class="w-full rounded-lg bg-secondary py-4 text-base font-bold text-deep_green hover:brightness-105 transition-all shadow-lg active:scale-[0.98]">
+                Proceed to Checkout
+            </button>
+        </div>
+    </aside>
+
+    <header class="sticky top-0 z-50 w-full border-b border-black/5 bg-white/80 backdrop-blur-md">
+        <div class="mx-auto flex max-w-[1280px] items-center justify-between px-6 py-2 md:px-10">
+
+            <!-- Logo -->
+            <div class="flex items-center">
+                <img src="./assets/images/satvik-essential-logo.png" alt="Satvik Essentials"
+                    class="h-12 w-auto object-contain" />
+            </div>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden items-center gap-8 md:flex">
+                <a href="#products" class="text-sm font-medium text-gray-700 hover:text-deep_green transition">
+                    Home
+                </a>
+                <a href="#products" class="text-sm font-medium text-gray-700 hover:text-deep_green transition">
+                    Products
+                </a>
+                <a href="#testimonials" class="text-sm font-medium text-gray-700 hover:text-deep_green transition">
+                    Testimonials
+                </a>
+                <a href="#about" class="text-sm font-medium text-gray-700 hover:text-deep_green transition">
+                    About Us
+                </a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-3">
+                <!-- Cart -->
+                <button id="open-cart"
+                    class="relative flex h-10 w-10 items-center justify-center rounded-full border border-black/10 text-gray-700 hover:bg-black/5 transition">
+                    <span class="material-symbols-outlined text-[22px]">shopping_bag</span>
+                    <span id="cart-badge"
+                        class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-deep_green text-[10px] font-semibold text-white">
+                        2
+                    </span>
+                </button>
+
+                <!-- Connect Now (Desktop) -->
+                <a href="#contact"
+                    class="hidden md:inline-flex items-center rounded-full border border-deep_green px-5 py-2 text-sm font-semibold text-deep_green hover:bg-deep_green hover:text-white transition">
+                    Connect Now
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button id="menu-btn"
+                    class="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 md:hidden">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden border-t border-black/5 bg-white md:hidden">
+            <nav class="flex flex-col gap-4 px-6 py-6">
+                <a href="#products" class="text-sm font-medium text-gray-700">
+                    Products
+                </a>
+                <a href="#testimonials" class="text-sm font-medium text-gray-700">
+                    Testimonials
+                </a>
+                <a href="#about" class="text-sm font-medium text-gray-700">
+                    About Us
+                </a>
+
+                <a href="#contact"
+                    class="mt-2 inline-flex w-fit items-center rounded-full bg-deep_green px-5 py-2 text-sm font-semibold text-white">
+                    Connect Now
+                </a>
+            </nav>
+        </div>
+    </header>
+
+
+    <div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden  m-auto">
+
+        <main class="flex-1">
+
+            <!-- hero section -->
+            <section class="relative py-20 px-6">
+                <div class="max-w-7xl mx-auto">
+                    <div class="flex items-center gap-4 mb-12">
+                        <span class="h-[1px] w-8 bg-earth/20"></span>
+                        <span class="text-[10px] uppercase tracking-[0.3em] text-earth/50 font-semibold">The Satvik
+                            Larder — Est. 2025</span>
+                    </div>
+
+                    <div class="grid lg:grid-cols-12 gap-12 items-start">
+
+                        <div class="lg:col-span-4 space-y-6">
+                            <h1 class="text-3xl md:text-4xl font-display text-earth leading-tight tracking-tight">
+                                Essential Purity <br />
+                                <span class="italic font-serif text-sage">for the conscious kitchen.</span>
+                            </h1>
+
+                            <p class="text-[13px] leading-relaxed text-earth/60 max-w-xs font-light tracking-wide">
+                                Our collection spans stone-ground grains, cold-pressed oils, and sun-dried spices. Each
+                                product is a testament to traditional Indian preservation techniques, ensuring zero
+                                nutrient loss from our soil to your home.
+                            </p>
+
+                            <div class="flex flex-col gap-4 pt-4">
+                                <button
+                                    class="w-fit bg-earth text-cream px-8 py-3 rounded-sm text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-sage transition-colors duration-500">
+                                    Shop the Collection
+                                </button>
+                                <button
+                                    class="w-fit text-earth/40 hover:text-earth text-[10px] font-bold uppercase tracking-[0.2em] transition-all border-b border-transparent hover:border-earth">
+                                    Learn about our sourcing
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-4">
+
+                            <!-- Aata & Grains -->
+                            <div class="space-y-3 group">
+                                <div class="aspect-[3/4] overflow-hidden bg-gray-100 rounded-sm relative">
+                                    <img src="https://m.media-amazon.com/images/I/61noIc1eODL._AC_UF894,1000_QL80_.jpg"
+                                        class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700"
+                                        alt="Stone ground chakki wheat flour">
+                                    <div class="absolute top-3 right-3">
+                                        <span
+                                            class="bg-white/90 backdrop-blur px-2 py-1 text-[9px] font-bold uppercase tracking-widest text-earth">
+                                            Aata & Grains
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center px-1">
+                                    <span class="text-[11px] font-medium text-earth/80 tracking-wide">
+                                        Chakki Fresh Aata
+                                    </span>
+                                    <span class="text-[10px] text-sage italic">Starting ₹450</span>
+                                </div>
+                            </div>
+
+                            <!-- Spices -->
+                            <div class="space-y-3 group md:mt-12">
+                                <div class="aspect-[3/4] overflow-hidden bg-gray-100 rounded-sm relative">
+                                    <img src="https://cdn.shopify.com/s/files/1/0782/6161/6962/files/Untitled_design_-_2025-05-31T170753.993.jpg?v=1748691495"
+                                        class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700"
+                                        alt="Hand pounded Indian spices">
+                                    <div class="absolute top-3 right-3">
+                                        <span
+                                            class="bg-white/90 backdrop-blur px-2 py-1 text-[9px] font-bold uppercase tracking-widest text-earth">
+                                            Pure Spices
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center px-1">
+                                    <span class="text-[11px] font-medium text-earth/80 tracking-wide">
+                                        Hand-Pounded Spices
+                                    </span>
+                                    <span class="text-[10px] text-sage italic">Starting ₹199</span>
+                                </div>
+                            </div>
+
+                            <!-- Oils -->
+                            <div class="space-y-3 group">
+                                <div class="aspect-[3/4] overflow-hidden bg-gray-100 rounded-sm relative">
+                                    <img src="https://m.media-amazon.com/images/I/719QK6tCEmL._AC_UF894,1000_QL80_.jpg"
+                                        class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700"
+                                        alt="Cold pressed mustard oil in glass bottle">
+                                    <div class="absolute top-3 right-3">
+                                        <span
+                                            class="bg-white/90 backdrop-blur px-2 py-1 text-[9px] font-bold uppercase tracking-widest text-earth">
+                                            Wood-Pressed
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center px-1">
+                                    <span class="text-[11px] font-medium text-earth/80 tracking-wide">
+                                        Kachi Ghani Oils
+                                    </span>
+                                    <span class="text-[10px] text-sage italic">Starting ₹890</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+
+            <section
+                class="relative min-h-[calc(100vh-6rem)] flex items-center bg-[#FCFAF8] dark:bg-earth/5 px-6 py-24 overflow-hidden">
+
+                <!-- Decorative background shape -->
+                <div
+                    class="absolute top-0 right-0 w-1/2 h-full bg-sage/5 -skew-x-12 translate-x-1/4 pointer-events-none">
+                </div>
+
+                <div class="max-w-7xl mx-auto w-full relative z-10">
+                    <div class="grid lg:grid-cols-12 gap-16 items-center">
+
+                        <!-- Left Content -->
+                        <div class="lg:col-span-5 space-y-8">
+                            <div class="inline-block px-4 py-1.5 mb-4 border border-sage/30 rounded-full">
+                                <span class="text-xs uppercase tracking-[0.2em] text-sage font-bold">
+                                    100% Organic Harvest
+                                </span>
+                            </div>
+
+                            <h1
+                                class="text-6xl md:text-8xl font-display font-light text-earth dark:text-cream leading-[0.95] tracking-tight">
+                                Purity in <br />
+                                <span class="italic font-serif text-sage">every grain.</span>
+                            </h1>
+
+                            <p
+                                class="text-lg md:text-xl font-light text-earth/80 dark:text-cream/80 max-w-md leading-relaxed">
+                                Traditionally stone-ground Aata and pure Turmeric, harvested with respect for the earth
+                                and delivered fresh to your kitchen.
+                            </p>
+
+                            <div class="pt-6">
+                                <button type="button"
+                                    class="bg-earth text-white dark:bg-cream dark:text-earth px-10 py-4 rounded-full font-medium text-lg shadow-xl shadow-earth/20 hover:scale-105 transition-transform duration-300 will-change-transform">
+                                    Connect Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Products -->
+                        <div class="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-10">
+
+                            <!-- Turmeric -->
+                            <div class="group relative mt-12">
+                                <div
+                                    class="relative aspect-[4/5] overflow-hidden rounded-3xl bg-white shadow-2xl shadow-earth/10">
+                                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110 will-change-transform"
+                                        style="background-image: url('https://brownliving.in/cdn/shop/files/pure-himalayan-turmeric-powder-natural-healthy-spice-ln-tur200-01-live-in-nature-4139511.jpg?v=1767693033');">
+                                    </div>
+
+                                    <div
+                                        class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
+                                        <button type="button"
+                                            class="w-full bg-white text-earth py-3 rounded-xl font-bold tracking-wide transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                            QUICK ADD — ₹299
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="mt-6">
+                                    <h3 class="text-2xl font-display font-semibold text-earth dark:text-cream">
+                                        Pure Turmeric
+                                    </h3>
+                                    <p class="text-sage font-medium italic">
+                                        Sun-dried & Hand-pounded
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Aata -->
+                            <div class="group relative">
+                                <div
+                                    class="relative aspect-[4/5] overflow-hidden rounded-3xl bg-white shadow-2xl shadow-earth/10">
+                                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110 will-change-transform"
+                                        style="background-image: url('https://betternutrition.in/cdn/shop/files/Atta_fba2ef95-d2da-40dc-92cc-c67c1cbf91c4.webp?v=1768727433&width=1920');">
+                                    </div>
+
+                                    <div
+                                        class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
+                                        <button type="button"
+                                            class="w-full bg-white text-earth py-3 rounded-xl font-bold tracking-wide transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                            QUICK ADD — ₹450
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="mt-6">
+                                    <h3 class="text-2xl font-display font-semibold text-earth dark:text-cream">
+                                        Stone-Ground Aata
+                                    </h3>
+                                    <p class="text-sage font-medium italic">
+                                        Whole Wheat Goodness
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <div class="flex flex-col items-center text-center mb-16 py-12">
+                <span
+                    class="px-3 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest rounded-full mb-4">Limited
+                    Release</span>
+                <h1
+                    class="text-[#121b0d] dark:text-white text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-4">
+                    The Coming Soon Collection</h1>
+                <p class="text-[#669a4c] dark:text-[#a3c990] text-lg max-w-6xl">
+                    Traditional processing meets organic purity. Our newest essentials are arriving soon to your
+                    kitchen. Be the first to experience heritage-grade nutrition.
+                </p>
+            </div>
+
+
+            <!-- Products Grid -->
+            <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+                <!-- Product Card 1 -->
+                <div
+                    class="group relative flex flex-col bg-white dark:bg-[#1f2e16] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <div class="absolute top-3 left-3 z-10">
+                        <span
+                            class="bg-background-dark/80 text-white text-[10px] font-bold px-2 py-1 rounded backdrop-blur-sm">PRE-ORDER
+                            SOON</span>
+                    </div>
+                    <div class="w-full aspect-square bg-cover bg-center transition-transform duration-500 group-hover:scale-105 opacity-80"
+                        data-alt="Traditional bilona ghee in a clay pot"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCXfvJJ0rJya3T1qiRQE96ccDeyXG7eDxg6PRgDa-WrxAnogAG0JDO-67sTr3zMvucJRZTfHvxbgQT46dd1VZVbr6g5v8UfJ_cH6MIMr2REtKZKT9rCbk7atHBl2RpZ9kEIALSKI8mRIFvO2-m7mxZnHLX1QTr38Tn-A-zLLHzMQ194cSVFzwCxinfVF7U0v3MOEYXa8jhAy5tVvh_l5uyBAf5I7q0yScGMPVZc-gj1AmmrGFVr31aIIXsDXQby76ogdSN5MvhS0MX2");'>
+                    </div>
+                    <div class="p-5 flex flex-col flex-1">
+                        <div class="flex flex-col gap-1 mb-4">
+                            <h3 class="text-[#121b0d] dark:text-white text-lg font-bold">A2 Bilona Ghee</h3>
+                            <p class="text-[#669a4c] text-sm">Hand-churned vedic purity</p>
+                        </div>
+                        <div class="mt-auto">
+                            <button
+                                class="w-full py-2.5 bg-[#ebf3e7] dark:bg-[#2a3a22] text-[#669a4c] dark:text-[#a3c990] font-bold text-sm rounded-lg flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-[18px]">notifications</span>
+                                Notify Me
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Card 2 -->
+                <div
+                    class="group relative flex flex-col bg-white dark:bg-[#1f2e16] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <div class="absolute top-3 left-3 z-10">
+                        <span
+                            class="bg-background-dark/80 text-white text-[10px] font-bold px-2 py-1 rounded backdrop-blur-sm">PRE-ORDER
+                            SOON</span>
+                    </div>
+                    <div class="w-full aspect-square bg-cover bg-center transition-transform duration-500 group-hover:scale-105 opacity-80"
+                        data-alt="Green organic moringa leaf powder"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBodROabtrCFnSk_4qgV47Nx7R_9TVrx5iP5g-149t6NAM2PXJbwrAGTbt80RuttGu4H8bQUEkgHNenabW6qmmofxhqUOWq2nW_mnZHfqt-8gEx54JJLe7GyCEuh0lie06S9q1g1yZR_nTzVTE1jP1OGOY6QdeIIdR8GZm_9d-Mp3Ja4zbMW7aOXA-ai2q-hjT63pIBKaMejM82WbJAgDe_w-Ng6xPeitPj8xDRiWF8EFzf8Q1PsnUN-ibfCA0QrplM0vR9iF6htdeq");'>
+                    </div>
+                    <div class="p-5 flex flex-col flex-1">
+                        <div class="flex flex-col gap-1 mb-4">
+                            <h3 class="text-[#121b0d] dark:text-white text-lg font-bold">Moringa Powder</h3>
+                            <p class="text-[#669a4c] text-sm">Organic potent superfood</p>
+                        </div>
+                        <div class="mt-auto">
+                            <button
+                                class="w-full py-2.5 bg-[#ebf3e7] dark:bg-[#2a3a22] text-[#669a4c] dark:text-[#a3c990] font-bold text-sm rounded-lg flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-[18px]">notifications</span>
+                                Notify Me
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Card 3 -->
+                <div
+                    class="group relative flex flex-col bg-white dark:bg-[#1f2e16] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <div class="absolute top-3 left-3 z-10">
+                        <span
+                            class="bg-background-dark/80 text-white text-[10px] font-bold px-2 py-1 rounded backdrop-blur-sm">PRE-ORDER
+                            SOON</span>
+                    </div>
+                    <div class="w-full aspect-square bg-cover bg-center transition-transform duration-500 group-hover:scale-105 opacity-80"
+                        data-alt="Cold pressed mustard oil in glass bottle"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAiVkCUEqqiaBLbin0sLEvmbAuDfkpZBaim67PPhr_rmL_KblwmDQ7KeR5yK475dvu-cwyOClHd99Nel53X2JCOALz8gSZXEKY3mPWK7rLnLyN_qbdn3JBtvSNyF2szLBpewfkZsVhqu-8sE0S_Mc-22B09tq3aFG1YOJySzUv09vGvU4ZHTQH5dTlCRwB_6iW127WhMA8NStdphBCB_Xn9T1FdsaeFtR3aAXYhuzBxTbZ0VfEVSrh8GYaa-XxseZIRU-dDgNMaH9Id");'>
+                    </div>
+                    <div class="p-5 flex flex-col flex-1">
+                        <div class="flex flex-col gap-1 mb-4">
+                            <h3 class="text-[#121b0d] dark:text-white text-lg font-bold">Mustard Oil</h3>
+                            <p class="text-[#669a4c] text-sm">Wood-pressed essence</p>
+                        </div>
+                        <div class="mt-auto">
+                            <button
+                                class="w-full py-2.5 bg-[#ebf3e7] dark:bg-[#2a3a22] text-[#669a4c] dark:text-[#a3c990] font-bold text-sm rounded-lg flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-[18px]">notifications</span>
+                                Notify Me
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Card 4 -->
+                <div
+                    class="group relative flex flex-col bg-white dark:bg-[#1f2e16] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <div class="absolute top-3 left-3 z-10">
+                        <span
+                            class="bg-background-dark/80 text-white text-[10px] font-bold px-2 py-1 rounded backdrop-blur-sm">PRE-ORDER
+                            SOON</span>
+                    </div>
+                    <div class="w-full aspect-square bg-cover bg-center transition-transform duration-500 group-hover:scale-105 opacity-80"
+                        data-alt="Assorted whole Indian spices"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDgki3fCd16-A9-rcwlg4Das7BBFFDQhy-qJeiDzpWa9cBPaKqmxfrhXZXW5yMMx2BT44unya0buQcVfX32EY5PP5A248-qH4DE52u2AsDZWZNn7EgoVctdUpjvxvuJaJwJIxMiM4ysEwiQpbKSJWMIhgK_ZyGO2f_EtA13wgfVu44nYw4B0IKdLSYfSE200oKsTenmLr_qLoTdgpkVniXn6mnmYZoE2qsl1LgHrD2HtRdlXBI1AeND2uJvN3c87Fr_JFVcwyNpi2hv");'>
+                    </div>
+                    <div class="p-5 flex flex-col flex-1">
+                        <div class="flex flex-col gap-1 mb-4">
+                            <h3 class="text-[#121b0d] dark:text-white text-lg font-bold">Khada Masala</h3>
+                            <p class="text-[#669a4c] text-sm">Authentic whole spices</p>
+                        </div>
+                        <div class="mt-auto">
+                            <button
+                                class="w-full py-2.5 bg-[#ebf3e7] dark:bg-[#2a3a22] text-[#669a4c] dark:text-[#a3c990] font-bold text-sm rounded-lg flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-[18px]">notifications</span>
+                                Notify Me
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Our Process Section -->
+            <section class="py-20 md:py-32 bg-[#f9fbf7] dark:bg-[#0d130a] relative overflow-hidden">
+                <!-- Subtle Background Texture/Pattern -->
+                <div class="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none"
+                    style="background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');">
+                </div>
+
+                <div class="max-w-7xl mx-auto px-6 relative z-10">
+                    <!-- Header -->
+                    <div class="text-center mb-20">
+                        <span class="text-[#669a4c] font-bold tracking-[0.2em] uppercase text-xs mb-4 block">Our
+                            Methodology</span>
+                        <h2
+                            class="text-[#121b0d] dark:text-[#f9fcf8] text-4xl md:text-5xl font-serif font-bold leading-tight mb-6">
+                            Our Traditional Process
+                        </h2>
+                        <p class="text-[#4a5f3e] dark:text-[#a1ad98] text-lg max-w-2xl mx-auto leading-relaxed">
+                            From organic seeds to your kitchen table, we honor ancient traditions
+                            while maintaining modern safety standards.
+                        </p>
+                    </div>
+
+                    <!-- Process Flow Container -->
+                    <div class="relative">
+                        <!-- Connecting Line (Desktop: Horizontal | Mobile: Vertical) -->
+                        <div
+                            class="hidden md:block absolute top-12 left-[10%] right-[10%] h-[2px] bg-gradient-to-r from-transparent via-[#669a4c]/30 to-transparent">
+                        </div>
+                        <div
+                            class="md:hidden absolute left-8 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-[#669a4c]/30 to-transparent">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
+
+                            <!-- Step 1 -->
+                            <div
+                                class="group relative flex flex-row md:flex-col items-start md:items-center text-left md:text-center gap-6 md:gap-8">
+                                <div class="relative z-10">
+                                    <div
+                                        class="size-16 md:size-24 rounded-2xl bg-white dark:bg-[#1c2916] shadow-[0_10px_40px_-10px_rgba(102,154,76,0.2)] border border-[#e2ebd9] dark:border-[#2d3a24] flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
+                                        <span
+                                            class="material-symbols-outlined text-[#669a4c] !text-3xl md:!text-4xl">agriculture</span>
+                                    </div>
+                                    <span
+                                        class="absolute -top-4 -right-4 text-4xl font-black text-[#669a4c]/10 select-none">01</span>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-bold text-xl text-[#121b0d] dark:text-[#f9fcf8] mb-3">Ethical
+                                        Sourcing</h3>
+                                    <p class="text-sm md:text-base text-[#669a4c] dark:text-gray-400 leading-relaxed">
+                                        Selecting premium heirloom seeds and partnering directly with certified organic
+                                        farmers.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Step 2 -->
+                            <div
+                                class="group relative flex flex-row md:flex-col items-start md:items-center text-left md:text-center gap-6 md:gap-8">
+                                <div class="relative z-10">
+                                    <div
+                                        class="size-16 md:size-24 rounded-2xl bg-white dark:bg-[#1c2916] shadow-[0_10px_40px_-10px_rgba(102,154,76,0.2)] border border-[#e2ebd9] dark:border-[#2d3a24] flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3">
+                                        <span
+                                            class="material-symbols-outlined text-[#669a4c] !text-3xl md:!text-4xl">precision_manufacturing</span>
+                                    </div>
+                                    <span
+                                        class="absolute -top-4 -right-4 text-4xl font-black text-[#669a4c]/10 select-none">02</span>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-bold text-xl text-[#121b0d] dark:text-[#f9fcf8] mb-3">Traditional
+                                        Processing</h3>
+                                    <p class="text-sm md:text-base text-[#669a4c] dark:text-gray-400 leading-relaxed">
+                                        Slow-milled using hand-carved stone and wood-presses to keep vital nutrients and
+                                        enzymes intact.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Step 3 -->
+                            <div
+                                class="group relative flex flex-row md:flex-col items-start md:items-center text-left md:text-center gap-6 md:gap-8">
+                                <div class="relative z-10">
+                                    <div
+                                        class="size-16 md:size-24 rounded-2xl bg-white dark:bg-[#1c2916] shadow-[0_10px_40px_-10px_rgba(102,154,76,0.2)] border border-[#e2ebd9] dark:border-[#2d3a24] flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
+                                        <span
+                                            class="material-symbols-outlined text-[#669a4c] !text-3xl md:!text-4xl">sanitizer</span>
+                                    </div>
+                                    <span
+                                        class="absolute -top-4 -right-4 text-4xl font-black text-[#669a4c]/10 select-none">03</span>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-bold text-xl text-[#121b0d] dark:text-[#f9fcf8] mb-3">Hygienic
+                                        Packing</h3>
+                                    <p class="text-sm md:text-base text-[#669a4c] dark:text-gray-400 leading-relaxed">
+                                        Small-batch bottling in sterile, eco-friendly glass containers to preserve
+                                        natural aroma.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Step 4 -->
+                            <div
+                                class="group relative flex flex-row md:flex-col items-start md:items-center text-left md:text-center gap-6 md:gap-8">
+                                <div class="relative z-10">
+                                    <div
+                                        class="size-16 md:size-24 rounded-2xl bg-[#669a4c] shadow-[0_10px_40px_-10px_rgba(102,154,76,0.5)] flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3">
+                                        <span
+                                            class="material-symbols-outlined text-white !text-3xl md:!text-4xl">local_shipping</span>
+                                    </div>
+                                    <span
+                                        class="absolute -top-4 -right-4 text-4xl font-black text-[#669a4c]/10 select-none">04</span>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-bold text-xl text-[#121b0d] dark:text-[#f9fcf8] mb-3">Direct
+                                        Delivery</h3>
+                                    <p class="text-sm md:text-base text-[#669a4c] dark:text-gray-400 leading-relaxed">
+                                        Freshly prepared and dispatched directly to your doorstep within 48 hours of
+                                        processing.
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- Testimonials Section -->
+            <section class="bg-white py-24 px-6 border-t border-gray-50">
+                <div class="max-w-7xl mx-auto">
+
+                    <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
+                        <div class="max-w-md">
+                            <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 font-bold mb-2">Verified
+                                Reviews</p>
+                            <h2 class="text-2xl md:text-3xl font-display text-[#1A1A1A] tracking-tight">The difference
+                                is in the purity.</h2>
+                        </div>
+                        <a href="#"
+                            class="text-[11px] font-bold uppercase tracking-widest text-gray-900 border-b-2 border-black pb-1 hover:text-sage hover:border-sage transition-all">
+                            View All Reviews
+                        </a>
+                    </div>
+
+                    <div
+                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-100 border border-gray-100">
+
+                        <div class="bg-white p-10 flex flex-col justify-between hover:bg-gray-50 transition-colors">
+                            <div>
+                                <div class="flex items-center gap-2 mb-6">
+                                    <span
+                                        class="text-[9px] bg-sage/10 text-sage px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Bilona
+                                        Ghee</span>
+                                    <div class="flex text-[8px] text-yellow-500">★★★★★</div>
+                                </div>
+                                <p class="text-[13px] leading-[1.8] text-gray-700 font-light tracking-wide mb-8">
+                                    "Finally found Ghee that actually smells like my grandmother's kitchen. The texture
+                                    is perfectly granular, and you can tell it’s made using the traditional Bilona
+                                    method. A staple in our home now."
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="size-8 rounded-full bg-gray-100 overflow-hidden">
+                                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJFAQhJlrW-8zzbb6VduZjc1zpQW0lMGKTG6kyJ6YhPse-WT7lddiTog0gpzwIwdMjXDxvEh868nvRW0CWT2PQkmQtp9vWUBJr4uGloUESKBi7pRMh5m9EgvNrWqBdQAjb0xSua2xYfw9H5VgQ-q_HLgjfglfEj0T-h2abjXkztMWeN4q5vxkUUWDNxSie9Vgbp0Bjc_5kDLEr_myR_HX5wsIBpZXp47CG4OYvAMCKn0oDWhsn1W-jk0ttqIO9us6i1xAFy7kGfmRQ"
+                                        alt="Customer" class="object-cover w-full h-full">
+                                </div>
+                                <div>
+                                    <p class="text-[11px] font-bold text-gray-900 uppercase tracking-tight">Ananya Iyer
+                                    </p>
+                                    <p class="text-[9px] text-gray-400 uppercase">Verified Purchase</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-10 flex flex-col justify-between hover:bg-gray-50 transition-colors">
+                            <div>
+                                <div class="flex items-center gap-2 mb-6">
+                                    <span
+                                        class="text-[9px] bg-sage/10 text-sage px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Mustard
+                                        Oil & Haldi</span>
+                                    <div class="flex text-[8px] text-yellow-500">★★★★★</div>
+                                </div>
+                                <p class="text-[13px] leading-[1.8] text-gray-700 font-light tracking-wide mb-8">
+                                    "The pungency of the cold-pressed mustard oil is incredible. Pair that with the
+                                    vibrant color of their sun-dried Haldi, and our simple dal tastes like a gourmet
+                                    meal. No more chemical groceries for us."
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="size-8 rounded-full bg-gray-100 overflow-hidden">
+                                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwmguTmJqY-IJoe7sJJbHiDv0ekG5XhUZAwNYoHHNMk_dQCijU8PWJs7R3_1CjPdvv4lFRto_nmYdCQGBY6w9eJRqXqxNQErP5ZDK7r8b1WVzG_YbCfG6Brmzmd6nZr-a7VK1tSsx2jF1BIQUtX5DQvcUgSfxCWWhmAWGF8BaVaC1SpQmSxFWFc1Hs0fglRgzz1e_Y61Ekl54AxHO1vEapXX0Jnaf4DGECkQ7qwGI20eEwQ8VO1iZ_edtZpxve9pcDwydmywfwFFjz"
+                                        alt="Customer" class="object-cover w-full h-full">
+                                </div>
+                                <div>
+                                    <p class="text-[11px] font-bold text-gray-900 uppercase tracking-tight">Vikram Sethi
+                                    </p>
+                                    <p class="text-[9px] text-gray-400 uppercase">Verified Purchase</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-10 flex flex-col justify-between hover:bg-gray-50 transition-colors">
+                            <div>
+                                <div class="flex items-center gap-2 mb-6">
+                                    <span
+                                        class="text-[9px] bg-sage/10 text-sage px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Stone-Ground
+                                        Aata</span>
+                                    <div class="flex text-[8px] text-yellow-500">★★★★★</div>
+                                </div>
+                                <p class="text-[13px] leading-[1.8] text-gray-700 font-light tracking-wide mb-8">
+                                    "The Stone-Ground Aata is a game changer for digestion. The rotis stay soft for
+                                    hours and the natural bran content is clearly visible. You can really feel the
+                                    difference of the slow-milling process."
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="size-8 rounded-full bg-gray-100 overflow-hidden">
+                                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSXQWwc4xkjQUWGok0ypC0EK2Oxt-dilPsRwcQS93oSTAHudTm6G8xTr4EojNrQMdb9E1IrTYXxQ0iH2oUqE0q3G667TVJXUGX1MPIqxCwD5TeNW52VKYPhpzbrVHYASETtrxBlfGk6X8kDDk7uXV3XG91Y8h5tw7X5x5qmf1TOF40E5UF526O8XSLAv9nfc8eYayaalfSpNdg0ZjbwQrAXVD8JDPQTDUhgTfJ6CR4FEqi7pNlWIVQbQL3PQCpr8yX7zZ2C0JZh42H"
+                                        alt="Customer" class="object-cover w-full h-full">
+                                </div>
+                                <div>
+                                    <p class="text-[11px] font-bold text-gray-900 uppercase tracking-tight">Meera
+                                        Deshmukh</p>
+                                    <p class="text-[9px] text-gray-400 uppercase">Verified Purchase</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+
+    </div>
+
+    <footer class="bg-[#fcfdfa] dark:bg-background-dark border-t border-earthy-green/10">
+        <div class="mx-auto max-w-[1280px] px-6 md:px-10 py-16">
+
+            <!-- Top Section -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
+
+                <!-- Brand -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-2xl text-primary">eco</span>
+                        <span class="text-xl font-extrabold tracking-tight">
+                            Satvik Essentials
+                        </span>
+                    </div>
+                    <p class="text-sm text-earthy-green/80 max-w-sm leading-relaxed">
+                        Pure, traditionally crafted grocery essentials rooted in Indian heritage.
+                        From stone-ground grains to wood-pressed oils, we bring mindful nutrition
+                        to your kitchen.
+                    </p>
+                </div>
+
+                <!-- Links -->
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="space-y-3">
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-earth">
+                            Company
+                        </h4>
+                        <ul class="space-y-2">
+                            <li>
+                                <a href="#about" class="text-sm text-earthy-green hover:text-primary transition">
+                                    About Us
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#process" class="text-sm text-earthy-green hover:text-primary transition">
+                                    Our Process
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#testimonials" class="text-sm text-earthy-green hover:text-primary transition">
+                                    Testimonials
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-earth">
+                            Support
+                        </h4>
+                        <ul class="space-y-2">
+                            <li>
+                                <a href="#" class="text-sm text-earthy-green hover:text-primary transition">
+                                    Privacy Policy
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="text-sm text-earthy-green hover:text-primary transition">
+                                    Terms of Service
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="text-sm text-earthy-green hover:text-primary transition">
+                                    Shipping & Returns
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Connect -->
+                <div class="space-y-4">
+                    <h4 class="text-sm font-bold uppercase tracking-widest text-earth">
+                        Connect With Us
+                    </h4>
+
+                    <a href="#contact"
+                        class="inline-flex items-center gap-2 rounded-full border border-earthy-green px-5 py-2 text-sm font-semibold text-earthy-green hover:bg-earth hover:text-white transition">
+                        <span class="material-symbols-outlined text-[18px]">chat</span>
+                        Connect Now
+                    </a>
+
+                    <div class="flex gap-3 pt-2">
+                        <a href="#"
+                            class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-earthy-green hover:bg-primary/30 transition"
+                            aria-label="Website">
+                            <span class="material-symbols-outlined">public</span>
+                        </a>
+                        <a href="#"
+                            class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-earthy-green hover:bg-primary/30 transition"
+                            aria-label="Share">
+                            <span class="material-symbols-outlined">share</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="mt-16 pt-8 border-t border-earthy-green/10 text-center">
+                <p class="text-xs text-earthy-green tracking-wide">
+                    © 2026 Satvik Essentials. All rights reserved.
+                </p>
+                <p class="text-[11px] text-earthy-green/70 mt-1 italic">
+                    Crafted for health, harmony, and conscious living.
+                </p>
+            </div>
+
+        </div>
+    </footer>
+
+
+    <script>
+        // Cart Logic
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const cartOverlay = document.getElementById('cart-overlay');
+        const openCartBtn = document.getElementById('open-cart');
+        const closeCartBtn = document.getElementById('close-cart');
+        const itemsContainer = document.getElementById('cart-items-container');
+        const subtotalEl = document.getElementById('cart-subtotal');
+        const totalEl = document.getElementById('cart-total');
+        const badgeEl = document.getElementById('cart-badge');
+        let cartItems = [
+            { id: 1, name: 'Stone-ground Chakki Aata', price: 350, quantity: 1, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=100&h=100' },
+            { id: 2, name: 'Pure Lakadong Haldi', price: 150, quantity: 1, image: 'https://m.media-amazon.com/images/I/616DUzGIh1L.jpg' }
+        ];
+        function toggleCart(isOpen) {
+            if (isOpen) {
+                cartSidebar.classList.remove('translate-x-full');
+                cartSidebar.classList.add('translate-x-0');
+                cartOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                cartOverlay.classList.add('opacity-100', 'pointer-events-auto');
+            } else {
+                cartSidebar.classList.remove('translate-x-0');
+                cartSidebar.classList.add('translate-x-full');
+                cartOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+                cartOverlay.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+        function updateQuantity(id, delta) {
+            const item = cartItems.find(i => i.id === id);
+            if (item) {
+                item.quantity = Math.max(0, item.quantity + delta);
+                if (item.quantity === 0) {
+                    cartItems = cartItems.filter(i => i.id !== id);
+                }
+            }
+            renderCart();
+        }
+        function renderCart() {
+            itemsContainer.innerHTML = '';
+            let subtotal = 0;
+            let totalCount = 0;
+            if (cartItems.length === 0) {
+                itemsContainer.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-48 text-earthy_green">
+                    <span class="material-symbols-outlined text-5xl mb-2 opacity-20">shopping_cart_off</span>
+                    <p class="text-sm font-medium">Your cart is empty</p>
+                </div>
+            `;
+            } else {
+                cartItems.forEach(item => {
+                    subtotal += item.price * item.quantity;
+                    totalCount += item.quantity;
+                    const itemHtml = `
+                    <div class="flex items-center gap-4 py-4 border-b border-earthy_green/5">
+                        <div class="h-20 w-20 flex-shrink-0 rounded-lg overflow-hidden bg-white border border-earthy_green/10">
+                            <img src="${item.image}" alt="${item.name}" class="h-full w-full object-cover">
+                        </div>
+                        <div class="flex-1 space-y-1">
+                            <h3 class="text-sm font-bold leading-tight">${item.name}</h3>
+                            <p class="text-xs text-earthy_green dark:text-gray-400">₹${item.price} per unit</p>
+                            <div class="flex items-center gap-3 pt-2">
+                                <div class="flex items-center border border-earthy_green/20 rounded-lg overflow-hidden h-8">
+                                    <button onclick="updateQuantity(${item.id}, -1)" class="px-2 hover:bg-earthy_green/5 transition-colors">
+                                        <span class="material-symbols-outlined text-sm">remove</span>
+                                    </button>
+                                    <span class="w-8 text-center text-xs font-bold">${item.quantity}</span>
+                                    <button onclick="updateQuantity(${item.id}, 1)" class="px-2 hover:bg-earthy_green/5 transition-colors">
+                                        <span class="material-symbols-outlined text-sm">add</span>
+                                    </button>
+                                </div>
+                                <span class="text-sm font-black ml-auto">₹${item.price * item.quantity}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                    itemsContainer.insertAdjacentHTML('beforeend', itemHtml);
+                });
+            }
+            subtotalEl.innerText = `₹${subtotal.toLocaleString()}`;
+            totalEl.innerText = `₹${subtotal.toLocaleString()}`;
+            badgeEl.innerText = totalCount;
+            badgeEl.style.display = totalCount > 0 ? 'flex' : 'none';
+        }
+        openCartBtn.addEventListener('click', () => toggleCart(true));
+        closeCartBtn.addEventListener('click', () => toggleCart(false));
+        cartOverlay.addEventListener('click', () => toggleCart(false));
+        // Initial render
+        renderCart();
+    </script>
+    <script>
+        const menuBtn = document.getElementById("menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        menuBtn.addEventListener("click", () => {
+            mobileMenu.classList.toggle("hidden");
+        });
+    </script>
+
 </body>
+
 </html>
